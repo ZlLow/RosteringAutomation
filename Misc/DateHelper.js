@@ -4,6 +4,7 @@
  *          3. Reduce amount of Global Functions
  */
 const d = new Date();
+const MAX_TIME_INTERVAL = 240000;
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const dateHelper = class {
 

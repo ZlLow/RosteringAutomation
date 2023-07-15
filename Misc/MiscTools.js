@@ -94,3 +94,10 @@ const miscTools = class {
     }
 }
 
+
+/**
+ * Global Constant Variables
+ */
+const cache = CacheService.getScriptCache();
+
+const properties = PropertiesService.getScriptProperties();

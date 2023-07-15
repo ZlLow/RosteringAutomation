@@ -10,15 +10,15 @@ function createYearlyHierarchy() {
   try {
     let nextYear = dateHelper.getNextYear().getFullYear().toString();
     var hierarchy =
-    {
-      parentFolder: `ESS ${nextYear}`,
-      subDirectories: ["1. Events (OTH) - Quotations x Timesheet x Invoice x Payout", "Availability", "Rostering"],
-      args:
-        [{
-          parentFolder: "1. Events (OTH) - Quotations x Timesheet x Invoice x Payout",
-          subDirectories: [`OTH #${nextYear}-999 Completed Projects ${nextYear}`, `OTH #${nextYear}-998 Cancelled Projects ${nextYear}`]
-        }]
-    };
+        {
+          parentFolder: `ESS ${nextYear}`,
+          subDirectories: ["1. Events (OTH) - Quotations x Timesheet x Invoice x Payout", "Availability", "Rostering"],
+          args:
+              [{
+                parentFolder: "1. Events (OTH) - Quotations x Timesheet x Invoice x Payout",
+                subDirectories: [`OTH #${nextYear}-999 Completed Projects ${nextYear}`, `OTH #${nextYear}-998 Cancelled Projects ${nextYear}`]
+              }]
+        };
     var rootFolder = folder.retrieveFolderByName("ESS Main Folder");
     folder.generateFolderHierarchy(hierarchy, rootFolder);
   } catch (e) {
@@ -54,6 +54,7 @@ function createYearlySpreadsheets() {
     ErrorHandler.insertErrorLog(e);
   }
 }
+
 
 /*--------------------------------------------------------------------------Event Based Trigger ---------------------------------------------------------------------------------------------------- */
 
@@ -125,7 +126,7 @@ function createMonthlyRosterSpreadsheet(spreadsheetEvent) {
 function createAvailMenu(spreadsheetEvent) {
   try {
     let ss = spreadsheetEvent.source;
-    Menu.createMenu(ss, "Avail Menu", ["Update Data", "refreshAvailabilityData"]);
+    Menu.createMenu(ss, "Avail Menu", ["Update Data", "refreshAvailabilityData"],["Clear Cache","clearCache"]);
   } catch (e) {
     let ui = SpreadsheetApp.getUi();
     let handler = new ErrorHandler(ui);
@@ -157,11 +158,10 @@ function createRosterMenu(spreadsheetEvent) {
 function createMasterMenu(spreadsheetEvent) {
   try {
     let ss = spreadsheetEvent.source;
-    Menu.createMenu(ss, "Master Menu", ["Generate Availability Template", "generateIndividualSpreadsheet"]);
+    Menu.createMenu(ss, "Master Menu", ["Insert Individuals Spreadsheet", "createNewIndividualTemplate"],["Update Individuals Spreadsheet", "generateIndividualSpreadsheet"]);
   } catch (e) {
     let ui = SpreadsheetApp.getUi();
     let handler = new ErrorHandler(ui);
     handler.createAlert(e);
   }
 }
-

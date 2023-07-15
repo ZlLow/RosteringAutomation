@@ -4,16 +4,16 @@ class Sheet {
   }
 
   /**
- * Get All Data from the specific Sheet
- *
- * @returns {2D Array} Returns all values
- * Example: [
- *           ["Refresh Data","Generate Data"],
- *           ["no","no","ESS Roster Sheet","",...].
- *           ["ESS ID","Name"],
- *           ...
- *          ]
- */
+   * Get All Data from the specific Sheet
+   *
+   * @returns {2D Array} Returns all values
+   * Example: [
+   *           ["Refresh Data","Generate Data"],
+   *           ["no","no","ESS Roster Sheet","",...].
+   *           ["ESS ID","Name"],
+   *           ...
+   *          ]
+   */
   getAllData() {
     let range = this.sheet.getDataRange();
     return range.getValues();
@@ -35,10 +35,10 @@ class Sheet {
         if (value === headerValue)
           return colIndex;
       })
-        .filter(value => value !== undefined);
+          .filter(value => value !== undefined);
       if (colIndexes.length)
         return { rowIndex, colIndexes };
-    }).filter(data => data);
+    }).filter(data => data !== undefined);
   }
 
   /**
@@ -101,9 +101,9 @@ class Sheet {
     if (typeof startingRowIndex !== "number" || typeof startingColIndex !== "number" && (!Array.isArray(validationData)))
       throw new TypeError("An incorrect type have been entered! : Ensure that startingRowIndex & startingColIndex is numeric and validationData is an array");
     var rule =
-      SpreadsheetApp.newDataValidation()
-        .requireValueInList(validationData)
-        .build();
+        SpreadsheetApp.newDataValidation()
+            .requireValueInList(validationData)
+            .build();
     var range = this.sheet.getRange(startingRowIndex, startingColIndex, numsRow, numsCol);
     return range.setDataValidation(rule);
   }
@@ -167,7 +167,7 @@ class Sheet {
     for (let i = 1; i <= dateHeaderData.length; i++) {
       let borderedRange = this.sheet.getRange(1, i * 5, 999, 1);
       borderedRange.setBorder(null, true, null, null, null, null);
-      this.insertDataValidation(3, i * 5, dataValidation, 100, 1);
+      this.insertDataValidation(3, i * 5, dataValidation, 500, 1);
 
       this.insertData(1, i * 5, 1, 5, [[`${i} ${monthName}`, "", "", "", ""]], true, true, false, true, true);
     }
@@ -183,16 +183,16 @@ class Sheet {
     this.insertData(1, 1, 1, 5, [
       ["Input Event Code (Refer to Master Account Sheet)", "", "", "", ""]
     ], true, true, false, true, true)
-      .setBorder(true, true, true, true, null, null)
-      .setBackground("#93ccea");
+        .setBorder(true, true, true, true, null, null)
+        .setBackground("#93ccea");
 
     this.insertData(2, 1, 1, 5, [["Valuation Data (Refer to Bank Statement)", "", "", "", ""]], true, true, false, true, true)
-      .setBorder(true, true, true, true, null, null)
-      .setBackground("#a4c2f4");
+        .setBorder(true, true, true, true, null, null)
+        .setBackground("#a4c2f4");
 
     this.insertData(3, 1, 1, 5, [["Done By (Input your Name)", "", "", "", ""]], true, true, false, true, true)
-      .setBorder(true, true, true, true, null, null)
-      .setBackground("#a4c2f4");
+        .setBorder(true, true, true, true, null, null)
+        .setBackground("#a4c2f4");
 
     let approval = ["P. Approval", "Approval"];
     let invoice = ["Invoice Not Sent", "Invoice Sent"];
@@ -221,11 +221,11 @@ class Sheet {
 
     let rateTotal = this.insertData(5, 11, 100, 1, [[""], ...placeholder], false, false, false, true, true);
     rateTotal.setFormulaR1C1("=R[0]C[-1]*R[0]C[-2]")
-      .setNumberFormat("$0.00");
+        .setNumberFormat("$0.00");
 
     let totalAmounts = this.insertData(5, 15, 100, 1, [[""], ...placeholder]);
     totalAmounts.setFormulaR1C1("=R[0]C[-1]+R[0]C[-2]+R[0]C[-3]+R[0]C[-4]")
-      .setNumberFormat("$0.00");
+        .setNumberFormat("$0.00");
 
     console.log("Inserting Column Header");
     this.insertData(5, 1, 100, 1, [["Enter Event Title (Refer to Master Account Sheet)"], ...placeholder], true, true, false, true, true);
@@ -236,25 +236,25 @@ class Sheet {
 
     console.log("Inserting Total Amounts");
     this.insertData(106, 10, 1, 1, [["Total"]], true)
-      .setBackground("#a4c2f4")
-      .setBorder(true, true, true, true, null, null);
+        .setBackground("#a4c2f4")
+        .setBorder(true, true, true, true, null, null);
     let totalSum = this.insertData(106, 11, 1, 1, [[""]], true);
     totalSum.setFormulaR1C1("=SUM(R[-102]C[0]:R[-2]C[0])")
-      .setBorder(true, true, true, true, null, null)
-      .setNumberFormat("$0.00");
+        .setBorder(true, true, true, true, null, null)
+        .setNumberFormat("$0.00");
 
     console.log("Inserting Total with Claims");
     this.insertData(106, 14, 1, 1, [["Total Claims"]], true)
-      .setBackground("#a4c2f4")
-      .setBorder(true, true, true, true, null, null);
+        .setBackground("#a4c2f4")
+        .setBorder(true, true, true, true, null, null);
     let totalClaims = this.insertData(106, 15, 1, 1, [[""]], true);
     totalClaims.setFormulaR1C1("=SUM(R[-102]C[0]:R[-2]C[0])")
-      .setBorder(true, true, true, true, null, null)
-      .setNumberFormat("$0.00");
+        .setBorder(true, true, true, true, null, null)
+        .setNumberFormat("$0.00");
 
     console.log("Inserting Row Example");
     this.insertData(108, 2, 1, 15, [["", "", "", "Copy Paste this whole row for every New Entries/Rows or inserts last row", "", "", "", "", "", "", "", "", "", "", 0]], true, false, false, false, true)
-      .setBorder(true, true, true, true, null, null);
+        .setBorder(true, true, true, true, null, null);
 
     console.log("Inserting Formulas for Duration");
     let sampleDurations = this.insertData(108, 9, 1, 1, [[""]], false, false, false, true, true);
@@ -263,12 +263,12 @@ class Sheet {
     console.log("Inserting Formulas for Total Rate Amount");
     let samplerateTotal = this.insertData(108, 11, 1, 1, [[""]], false, false, false, true, true);
     samplerateTotal.setFormulaR1C1("=R[0]C[-1]*R[0]C[-2]")
-      .setNumberFormat("$0.00");
+        .setNumberFormat("$0.00");
 
     console.log("Inserting Formulas for Total Amount");
     let sampletotalAmounts = this.insertData(108, 15, 1, 1, [[""]]);
     sampletotalAmounts.setFormulaR1C1("=R[0]C[-1]+R[0]C[-2]+R[0]C[-3]+R[0]C[-4]")
-      .setNumberFormat("$0.00");
+        .setNumberFormat("$0.00");
 
 
     console.log("Inserting Border for all Rows");
@@ -283,111 +283,79 @@ class Sheet {
   createIndividualTemplate(datestring = "") {
     if (typeof datestring !== "string")
       throw new TypeError("Ensure that name of the month is in string format");
-
-    let [month, year] = datestring.split(" ");
-    month = month.slice(0,3);
+    let month, year;
+    if (datestring) {
+      [month, year] = datestring.split(" ");
+      month = month.slice(0, 3);
+    } else {
+      month = dateHelper.getMonthName().slice(0, 3);
+      year = dateHelper.getYear();
+    }
     let days = dateHelper.getDaysInMonth(month);
-    let array = Array.from({ length: days }, (_, i) => `${i + 1}`);
+    let array = Array.from({ length: days }, (_, i) => `${i + 1} ${month} ${year}`);
     console.log("Inserting Template Header");
-    this.insertData(1,1,1,2,[["Date", "Availability"]],true);
+    this.insertData(1, 1, 1, 2, [["Date", "Availability"]], true);
 
+    let dataArray = array.map(value => [value]);
     console.log("Inserting Data Validation");
-    let dataValidation = ["Available", "till 3pm", "after 3pm","Not Available"];
-
-    array.forEach((value,index) => {
-      this.insertData(2 + index,1,1,1,[[`${value} ${month} ${year}`]]);
-      this.insertDataValidation(2 + index,2,dataValidation,1,1);
-    })
-
+    let dataValidation = ["Available", "till 3pm", "after 3pm", "Not Available"];
+    this.insertData(2, 1, array.length, 1, dataArray);
+    this.insertDataValidation(2, 2, dataValidation, array.length, 1);
+    SpreadsheetApp.flush();
   }
 
   /**
    * Append Data to the Spreadsheet
    * @param {Array of JSON} externalData: Values retrieved from other Spreadsheet
    * @param {Array} dataValue: Values retrieved from current Sheet
+   * @param {boolean} canReplace: Value that can replace other value;
    */
-  appendData(externalData, dataValue) {
-    console.log("Inserting Modification Data");
+  appendData(externalData, dataValue, canReplace = false) {
     // Find All ID from the current spreadsheet
-    let foundData = externalData.filter(dataRow => dataValue.find(valueRow => valueRow[0] === parseInt(dataRow.id))
-    );
+    let dataIDs = dataValue.map(val => val[0]);
+    let foundData = externalData.filter(dataRow => dataIDs.includes(parseInt(dataRow.id)));
     if (foundData.length) {
-      let headerLength = Object.keys(foundData[0]).length - 1;
-      // Remove all None Repeating Data [ID,Name,Mobile,Location];
-      let filteredDataValue = dataValue.map(dataRow => dataRow.slice(headerLength));
-      filteredDataValue = filteredDataValue.map((row, rowIndex) => { return { row, rowIndex } });
+      console.log("Inserting Modification Data");
+      let headerLength = 2;
 
-      let modifyData = filteredDataValue.map(data => {
-        let rowIndex = data.rowIndex;
-        let rowValue = data.row.map((value, colIndex) => {
-          if (value === "")
-            return colIndex;
-        }).filter(value => value !== undefined);
-        return { rowValue, rowIndex };
-      })
-      foundData.sort((a, b) => a.id - b.id);
-      modifyData.sort();
-      modifyData.forEach(row => {
-        let rowIndex = parseInt(row.rowIndex);
-        let values = row.rowValue;
-        values.forEach(value => {
-          let val = parseInt(value);
-          let data = foundData[rowIndex].data[val];
-          this.insertData(3 + rowIndex, headerLength + (val + 1), 1, 1, [[`${data}`]]);
+      let modifyData = foundData.map(val => [...Object.values(val)].flat().slice(headerLength));
+      let currentData = dataValue.map(data => data.slice(headerLength));
+      if (!canReplace) {
+        currentData.forEach((row,rowIndex) => {
+          modifyData[rowIndex] = row.map((val, col) => (val === "" && modifyData[rowIndex][col] ? modifyData[rowIndex][col] : val));
         })
-      });
-    }
+      }
+      this.insertData(3, headerLength + 1, modifyData.length, modifyData[0].length, modifyData);
 
+    }
+    let lastRow = this.sheet.getLastRow();
     console.log("Appending New Data");
     let appendData = externalData.filter(data => !foundData.includes(data)).map(value => [...Object.values(value)].flat());
-    appendData.sort();
-    if (appendData.length) {
-      appendData.forEach(row => this.sheet.appendRow(row))
-    }
+    if (appendData.length)
+      this.insertData(lastRow + 1, 1, appendData.length, appendData[0].length, appendData);
+    return;
   }
 
   /**
    * Update Availability Data by Pulling in data
-   * Retrieve Personal Data from Individuals Folder
-   * @params {string} folderName: Folder Name to retrieve all the spreadsheet
-   * @params {Folder}  rootFolder: Root Folder which folderName resides (Can be empty)
-   * @params {string} monthName: Short Name of the Month which is to be inserted into
+   * @params {string} sheetName: Name of the Sheet
+   * @params {Array} args: Data in which Availability Spreadsheet Require to Service
+   * [
+   *  {id: 1 , name: "David" ,data: ['Available','Not Available']},
+   *  {id: 2 , name: "Yi Xin" ,data: ['Not Available','Not Available']},
+   *  {id: 3 , name: "Aaron" ,data: ['Available','Available']}
+   * ]
    */
-  insertAvailabilityData(folderName, rootFolder = "", monthName = "") {
-    if (typeof folderName !== "string" || (rootFolder && !rootFolder instanceof Object) || (monthName && typeof monthName !== "string"))
+  insertAvailabilityData(args=[]) {
+    if ((args && !args instanceof Array))
       throw new TypeError("Invalid inputs. Please ensure that all the parameters are in the correct format!");
-    console.log("Retrieving Personal Data");
-    let individualFolder = !rootFolder ?
-      folder.retrieveFolderByName(folderName) :
-      folder.retrieveFolderByName(folderName, rootFolder);
-    let files = folder.retrieveAllSpreadsheetsInFolder(individualFolder);
-
-
-    console.log("Retrieving All Data from Spreadsheet");
-    let personalAvailabilitySS = files.map(file => new Spreadsheet(file));
-    if (monthName === "")
-      monthName = dateHelper.getMonthName().slice(0, 3);
-    let year = dateHelper.getYear().slice(2);
-    let availData = personalAvailabilitySS.map(ss => {
-      let [id, name, _] = ss.getName().split("_");
-      let sheet = ss.getSheet(`${monthName} ${year}`);
-      if (sheet) {
-        let allData = sheet.getAllData();
-        let data = allData.map(data => data[1]).slice(1);
-        return { id, name, data };
-      } else
-        return null;
-    }).filter(value => value);
-    if (!availData.length) {
-      console.log("Unable to retrieve any files");
-      return;
-    }
-    availData.sort();
-
+    let availData = args;
+    availData.sort((a, b) => parseInt(a.id) - parseInt(b.id));
     console.log("Checking Current Data");
     let ssDataValues = this.getAllData();
     ssDataValues = ssDataValues.slice(2);
-    this.appendData(availData, ssDataValues);
+    this.appendData(availData, ssDataValues, true);
+    return;
   }
 
   /**
@@ -408,36 +376,41 @@ class Sheet {
     let headerIndex = headerRow.map((value, index) => {
       if (value !== "")
         return index
-    }).filter(value => value);
-    headerIndex.unshift(0);
-
+    }).filter(value => value !== undefined);
 
     console.log("Retrieving Personal Data");
     let availFile = !rootFolder ?
-      file.retrieveFileByName(fileName) :
-      file.retrieveFileByName(fileName, rootFolder);
+        file.retrieveFileByName(fileName) :
+        file.retrieveFileByName(fileName, rootFolder);
     let availSS = new Spreadsheet(SpreadsheetApp.open(availFile));
     if (monthName === "")
       monthName = dateHelper.getMonthName().slice(0, 3);
     let availSheet = availSS.getSheet(monthName);
     if (!availSheet)
-      return;
+      throw new Error("Unable to retrieve the sheet");
     let availData = availSheet.getAllData();
     if (!availData.length) {
       console.log("Unable to retrieve any files");
-      return;
+      throw new Error("Empty Sheet is found");
     }
     var partialAvailability = ["till 3pm", "after 3pm"];
     availData = availData.slice(2);
+    let dataIDs = availData.map(row => row[0]);
 
     console.log("Retrieving from Master Sheet");
     let personalData = masterSheet.getAllData();
-    personalData = personalData.slice(1);
-    personalData = personalData.filter(dataRow => availData.find(row => row[0] === dataRow[0]) ? true : false);
-    personalData = personalData.map(row => row.slice(2, 4))
-    availData = availData.map((dataRow, index) => {
-      return { id: dataRow[0], name: dataRow[1], mobile: personalData[index][0], location: personalData[index][1], data: dataRow.slice(2) }
-    })
+    personalData.shift();
+    personalData = personalData.filter(dataRow => dataIDs.includes(dataRow[0]));
+    if (personalData.length) {
+      personalData = personalData.map(row => row.slice(2, 4));
+      availData = availData.map((dataRow, index) => {
+        return { id: dataRow[0], name: dataRow[1], mobile: personalData[index][0], location: personalData[index][1], data: dataRow.slice(2) }
+      }).filter(val => val !== undefined);
+    } else {
+      availData = availData.map(dataRow => {
+        return { id: dataRow[0], name: dataRow[1], data: dataRow.slice(2)}
+      });
+    }
     availData.sort((a, b) => a.id - b.id);
     availData.forEach(dataRow => {
       headerIndex.forEach((header, i) => {
@@ -458,7 +431,9 @@ class Sheet {
    * Inserting Data into Timesheet
    * @params {Array of JSON} args: Arguments for creation of Timesheet Data
    * Data Sample:
-   * [
+   * [{
+   *   id: "OTH #2023-001"
+   *   crew : [
    *           {
    *            id: 1,
    *            name: "David",
@@ -471,7 +446,10 @@ class Sheet {
    *            role: ["IC"],
    *            date: ["1 June"]
    *           },
-   *]
+   *          ]
+   *         }
+   * }
+   * ]
    * Different Dates can have repeating Events
    */
   insertTimesheetData(args) {
@@ -482,53 +460,45 @@ class Sheet {
     let dateColIndex = this.getHeader("Date")[0].colIndexes[0];
     let insertRow = this.getAllData().slice(rowIndex + 1);
     let serialNoIndexes = insertRow.map(data => data[serialNoColIndex]);
+    insertRow = insertRow.map(val => val.slice(1));
 
     console.log("Inserting Data");
-    let insertData = args.filter(value => serialNoIndexes.includes(value.id));
-    let currentCell = insertRow.filter(row => row[colIndexes[0]]).map((dataRow, index) => {
-      let columnIndex = dataRow.slice(nameColIndex[0], dateColIndex + 1).map((col, colIndex) => {
-        if (col === "")
-          return colIndex;
-      }).filter(value => value);
-      return { columnIndex, index };
-    });
-    currentCell.forEach((cellValue, index) => {
-      let obj = insertData[index];
-      if (obj) {
-        let name = insertData[index].name;
-        let roles = [... new Set(insertData[index].role)].join(",");
-        let dates = insertData[index].date.join(",")
-        cellValue.columnIndex.forEach(colValue => {
-          console.log(colValue);
-          switch (colValue) {
-            case 3:
-              this.insertData((rowIndex + 2) + index, colValue + colIndexes[0], 1, 1, [[name]]);
-              break;
-            case 4:
-              this.insertData((rowIndex + 2) + index, colValue + colIndexes[0], 1, 1, [[roles]]);
-              break;
-            case 5:
-              this.insertData((rowIndex + 2) + index, colValue + colIndexes[0], 1, 1, [[dates]]);
-              break;
-            default:
-              break;
-          }
-        })
-      }
-    })
+    let data = args.filter(value => serialNoIndexes.includes(value.id));
+    if (data.length) {
+      let currentCell = insertRow.filter(row => row[colIndexes[0]]).map((dataRow, rowIndex) => {
+        let columnIndexes = dataRow.slice(nameColIndex[0], dateColIndex).map((col, colIndex) => {
+          if (col === "")
+            return colIndex;
+        }).filter(value => value !== undefined);
+        return { columnIndexes, rowIndex };
+      }).filter(val => val.columnIndexes.length);
+      currentCell.forEach(row => {
+        let rowIndex = row.rowIndex;
+        let val = data[rowIndex];
+        if (val) {
+          let roles = [... new Set(val.role)].join(",");
+          let dates = [... new Set(val.date)].join(",");
+          row.columnIndexes.forEach(col => {
+            if (col == serialNoColIndex - 1) insertRow[rowIndex][col] = val.id;
+            else if (col == nameColIndex - 1) insertRow[rowIndex][col] = val.name;
+            else if (col == roleColIndex - 1) insertRow[rowIndex][col] = roles;
+            else if (col == dateColIndex - 1) insertRow[rowIndex][col] = dates;
+            return;
+          })
+        }
+      })
+      this.insertData(rowIndex + 2,colIndexes[0] + 1, insertRow.length,insertRow[0].length, insertRow);
+    }
 
-    let appendData = args.filter(value => !serialNoIndexes.includes(value.id));
-    let appendIndex = insertRow.findIndex(row => !row[0]);
     console.log("Appending Data");
-    appendData.forEach(value => {
-      let dates = value.date.join(",");
-      let roles = [...new Set(value.role)].join(",");
-      this.insertData(appendIndex + (rowIndex + 1), serialNoColIndex + 1, 1, 1, [[value.id]]);
-      this.insertData(appendIndex + (rowIndex + 1), nameColIndex + 1, 1, 1, [[value.name]]);
-      this.insertData(appendIndex + (rowIndex + 1), roleColIndex + 1, 1, 1, [[roles]]);
-      this.insertData(appendIndex + (rowIndex + 1), dateColIndex + 1, 1, 1, [[dates]]);
-      this.insertData(appendIndex + (rowIndex + 1), colIndexes[0] + 1, 1, 1, [[appendIndex++]]);
-    })
+    let appendIndex = insertRow.findIndex(row => !row[0]);
+    let appendData = args.filter(value => !serialNoIndexes.includes(value.id))
+        .map((val,index) => {
+          let roles = [... new Set(val.role)].join(",");
+          let dates = [... new Set(val.date)].join(",");
+          return [appendIndex + index+ 1,val.id,val.name,roles,dates];
+        });
+    if (appendData.length)
+      this.insertData(appendIndex + (rowIndex + 2), colIndexes[0] + 1,appendData.length,appendData[0].length, appendData);
   }
-
 }

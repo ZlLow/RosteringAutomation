@@ -55,11 +55,12 @@ const folder = class {
      */
     static retrieveAllSpreadsheetsInFolder(rootFolder) {
         if (!rootFolder instanceof Object)
-            throw new TypeError("There is some errors in the parameter :rootFolder is not in the right format!");
+            throw new TypeError("There is some errors in the parameter: rootFolder is not in the right format!");
         let files = [];
         let iterator = rootFolder.getFilesByType(MimeType.GOOGLE_SHEETS);
-        while (iterator.hasNext())
-            files.push(SpreadsheetApp.open(iterator.next()));
+        while (iterator.hasNext()) {
+            files.push(iterator.next());
+        }
         return files;
     }
 

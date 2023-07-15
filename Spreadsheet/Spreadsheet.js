@@ -51,13 +51,13 @@ class Spreadsheet {
     let sheets = this.spreadsheet.getSheets();
     let foundSheet = sheets.find(sheet => sheet.getName() === sheetName);
     if (sheets.length === 1 &&
-      sheets[0].getName() === "Sheet1") {
+        sheets[0].getName() === "Sheet1") {
       console.log("Renaming Sheet Name to Month");
       foundSheet = sheets[0].setName(sheetName);
     }
     else if (!foundSheet) {
       console.log("Unable to find the correct sheet! Inserting Sheet into spreadsheet");
-      foundSheet = this.spreadsheet.insertSheet(sheetName);
+      foundSheet = this.spreadsheet.insertSheet(sheetName,sheets.length - 1);
     }
     return new Sheet(foundSheet);
   }
@@ -74,23 +74,14 @@ class Spreadsheet {
     if (type === TemplateType.Custom && !Object.keys(args).length)
       throw new Error("Unable to process customized template as no argument is provided")
     let sheet = this.insertSheet(sheetName);
-    let year = dateHelper.getYear();
-    var rootFolder = folder.retrieveFolderByName(`ESS ${year}`)
     switch (type) {
       case TemplateType.Availability:
         sheet.createAvailabilityTemplate(sheetName);
-        sheet.insertAvailabilityData("Individuals", "", sheetName);
-        SpreadsheetApp.setActiveSpreadsheet(this.spreadsheet);
         onOpenSpreadsheetTrigger(this.spreadsheet, "createAvailMenu");
         onOpenSpreadsheetTrigger(this.spreadsheet, "createMonthlyAvailSpreadsheet");
         break;
       case TemplateType.Roster:
         sheet.createRosterTemplate(sheetName);
-        let masterFile = file.retrieveFileByName("Event Crew");
-        let masterSS = new Spreadsheet(SpreadsheetApp.open(masterFile));
-        let masterSheet = masterSS.getSheet("Sheet1");
-        sheet.insertRosterData("Yearly Availability", masterSheet, rootFolder, sheetName);
-        SpreadsheetApp.setActiveSpreadsheet(this.spreadsheet);
         onOpenSpreadsheetTrigger(this.spreadsheet, "createMonthlyRosterSpreadsheet");
         onOpenSpreadsheetTrigger(this.spreadsheet, "createRosterMenu");
         break;
@@ -110,9 +101,12 @@ class Spreadsheet {
    * Insert Data to Sheet
    * @params {TemplateType} type: A Fixed List that detects type of template to generate
    * @params {string} sheetName: Name of the Sheet
-   * @params {Array of JSON} args: Arguments for creation of Timesheet Data
-   * Data Sample:
-   * [
+   * @params {JSON} args: Arguments for creation of Timesheet Data OR Availability
+   *
+   * Timesheet Data Sample:
+   * [{
+   *   id: "OTH #2023-001"
+   *   crew : [
    *           {
    *            id: 1,
    *            name: "David",
@@ -125,7 +119,17 @@ class Spreadsheet {
    *            role: ["IC"],
    *            date: ["1 June"]
    *           },
-   *]
+   *          ]
+   *         }
+   * }
+   * ]
+   *
+   * Availability Data Sample:
+   * [
+   *  {id: 1 , name: "David" ,data: ['Available','Not Available']},
+   *  {id: 2 , name: "Yi Xin" ,data: ['Not Available','Not Available']},
+   *  {id: 3 , name: "Aaron" ,data: ['Available','Available']}
+   * ]
    * @returns {Sheet} sheet : A new Object of Sheet;
    */
   insertDataToSheet(type = TemplateType, sheetName, args = []) {
@@ -135,13 +139,13 @@ class Spreadsheet {
     if (!foundSheet)
       throw new Error("Unable to find the sheet Name. Please ensure that the sheet name is correct!");
     let sheet = new Sheet(foundSheet);
-    let year = dateHelper.getYear();
-    var rootFolder = folder.retrieveFolderByName(`ESS ${year}`)
     switch (type) {
       case TemplateType.Availability:
-        sheet.insertAvailabilityData("Individuals", "", sheetName);
+        sheet.insertAvailabilityData(args);
         break;
       case TemplateType.Roster:
+        let year = dateHelper.getYear();
+        let rootFolder = folder.retrieveFolderByName(`ESS ${year}`)
         let masterFile = file.retrieveFileByName("Event Crew");
         let masterSS = new Spreadsheet(SpreadsheetApp.open(masterFile));
         let masterSheet = masterSS.getSheet("Sheet1");
